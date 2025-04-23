@@ -1,7 +1,7 @@
 import { fileTypeFromBuffer } from 'file-type'
 import fs from 'fs'
 
-async function extractImageFromFile (folder, filepath) {
+async function extractImageFromFile (folderName, filepath) {
   // get name of file
   const data = JSON.parse(fs.readFileSync(filepath, 'utf8'))
   // decode base64
@@ -11,23 +11,24 @@ async function extractImageFromFile (folder, filepath) {
   if (fileType) {
     const ext = fileType.ext
     // write to file
-    fs.writeFileSync(`./output/${folder}/${filename}.${ext}`, buff)
+    fs.writeFileSync(`./output/${folderName}/${filename}.${ext}`, buff)
     console.log(`Image saved as ${filename}.${ext}`)
   } else {
     console.log('File type not recognized')
   }
 }
 
-function extractImageFromFolder (folder) {
+function extractImageFromFolder (folderName) {
   // get all files in folder
-  const files = fs.readdirSync(`./Library/${folder}`)
+  const folderPath = `./StashTagSkins/Library/${folderName}`
+  const files = fs.readdirSync(folderPath)
   // iterate over files
   files.forEach(file => {
     // check if file is a json file
     if (file.endsWith('.json')) {
       // extract image from file
-      extractImageFromFile(folder, `./Library/${folder}/${file}`)
-      fs.accessSync(`./output/${folder}`)
+      extractImageFromFile(folderName, `${folderPath}/${file}`)
+      fs.accessSync(`./output/${folderName}`)
     }
   })
 }
